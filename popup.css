@@ -1,0 +1,24 @@
+body {
+  margin: 0;
+  background: linear-gradient(to left, #000428, #004e92);
+  font-family: Arial, sans-serif;
+  text-align: center;
+}
+
+.scoreboard {
+  font-size: 2em;
+  margin-top: 10px;
+  color: white;
+}
+
+#game {
+  display: block;
+  margin: 0 auto;
+  background: linear-gradient(to left, #000428, #004e92);
+  border: 2px solid white;
+}
+
+.gamehehe {
+    background: linear-gradient(to left, #000428, #004e92);
+
+}
