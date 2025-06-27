@@ -1,19 +1,19 @@
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
 
-const box = 20;
+const box = 40;
 let direction = "RIGHT";
 let nextDirection = "RIGHT";
 let score = 0;
 let highScore = localStorage.getItem("snakeHighScore") || 0;
 document.getElementById("high-score").innerText = "High score: " + highScore;
 
-let moveDelay = 98; // ms
+let moveDelay = 50; // ms
 let snake = [
-  { x: 200, y: 200 },
-  { x: 180, y: 200 },
-  { x: 160, y: 200 },
-  { x: 140, y: 200 }
+  { x: 6 * box, y: 6 * box },
+  { x: 5 * box, y: 6 * box },
+  { x: 4 * box, y: 6 * box },
+  { x: 3 * box, y: 6 * box }
 ];
 let prevSnake = JSON.parse(JSON.stringify(snake));
 let food = spawnFood();
@@ -27,10 +27,17 @@ document.addEventListener("keydown", (e) => {
 });
 
 function spawnFood() {
-  return {
-    x: Math.floor(Math.random() * (canvas.width / box)) * box,
-    y: Math.floor(Math.random() * (canvas.height / box)) * box
-  };
+  let foodPosition;
+  let maxX = Math.floor(canvas.width / box);
+  let maxY = Math.floor(canvas.height / box);
+  do {
+    foodPosition = {
+      x: Math.floor(Math.random() * maxX) * box,
+      y: Math.floor(Math.random() * maxY) * box
+    };
+    // Ensure food does not spawn on the snake
+  } while (snake.some(seg => seg.x === foodPosition.x && seg.y === foodPosition.y));
+  return foodPosition;
 }
 
 function moveSnake() {
@@ -55,10 +62,10 @@ function moveSnake() {
     }
     score = 0;
     snake = [
-      { x: 200, y: 200 },
-      { x: 180, y: 200 },
-      { x: 160, y: 200 },
-      { x: 140, y: 200 }
+      { x: 6 * box, y: 6 * box },
+      { x: 5 * box, y: 6 * box },
+      { x: 4 * box, y: 6 * box },
+      { x: 3 * box, y: 6 * box }
     ];
     prevSnake = JSON.parse(JSON.stringify(snake));
     direction = "RIGHT";
@@ -90,6 +97,8 @@ function drawSnake(interp) {
     let sy = lerp(prevSnake[i]?.y ?? snake[i].y, snake[i].y, interp);
 
     ctx.fillStyle = "blue";
+    if (i === 0) ctx.fillStyle = "blue"; // Head of the snake
+    else if (i === snake.length - 1) ctx.fillStyle = "lightblue"; // Tail of the snake
     ctx.fillRect(sx, sy, box, box);
 
     if (i === 0) {
